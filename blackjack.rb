@@ -6,7 +6,7 @@ SUITS = ["\u2660", "\u2663", "\u2665", "\u2666"]
 def get_num_decks
   puts "How many decks do you want to play with? (minimum of 3)"
   num_decks = gets.chomp.to_i
-  while num_decks < 3 do
+  while num_decks < 3
     puts "Minimum number of decks is 3"
     num_decks = gets.chomp.to_i
   end
@@ -28,12 +28,12 @@ end
 
 def get_first_two_cards(game_cards)
   first_two_cards = []
-  while first_two_cards.count < 2 do
-      available_cards = []
-      game_cards.each { |values|  available_cards << values if values[:count] > 0 }
-      card = get_random_card(available_cards)
-      first_two_cards << card
-      remove_card_from_deck(game_cards, card)
+  while first_two_cards.count < 2
+    available_cards = []
+    game_cards.each { |values|  available_cards << values if values[:count] > 0 }
+    card = get_random_card(available_cards)
+    first_two_cards << card
+    remove_card_from_deck(game_cards, card)
   end
   first_two_cards
 end
@@ -78,7 +78,7 @@ end
 def get_total(cards)
   total = 0
   cards.each do |values|
-    if values[0].to_s == "A" && total < 11
+    if values[0].to_s == "A" && total > 21 && total < 11
       total += 11
     else
       CARD_VALUES.each do |k, v|
@@ -108,7 +108,7 @@ end
 def finish_player_hand(game_cards, dealer_cards, player_cards, user_name)
   player_hand = player_cards
   hit_or_stay = hit_or_stay?(user_name)
-  while hit_or_stay == "H" do
+  while hit_or_stay == "H"
     player_hand = get_next_card(game_cards, player_hand)
     print_game(dealer_cards, player_hand, user_name)
     break if get_total(player_hand) > 20
@@ -126,7 +126,7 @@ def finish_dealer_hand(game_cards, dealer_cards, player_cards, user_name)
   print_game(dealer_cards, player_cards, user_name, dealer_turn = 1)
   dealer_hand = dealer_cards
   total = get_total(dealer_hand)
-  while total < 17 do
+  while total < 17
     dealer_hand = get_next_card(game_cards, dealer_hand)
     total = get_total(dealer_hand)
     print_game(dealer_hand, player_cards, user_name, dealer_turn = 1)
@@ -142,6 +142,11 @@ end
 def hit_or_stay?(user_name)
   puts "#{user_name}, Hit or Stay? (H/S)"
   hit_or_stay = gets.chomp.upcase
+  while ["H", "S"].none? { |letter| letter == hit_or_stay }
+    puts "Invalid selection. You must select either 'H' for Hit or 'S' for Stay:"
+    hit_or_stay = gets.chomp.upcase
+  end
+  hit_or_stay
 end
 
 def get_next_card(game_cards, cards)
@@ -194,7 +199,12 @@ end
 
 def deal_again?
   puts "Deal again? (Y/N)"
-  gets.chomp.upcase
+  deal_again = gets.chomp.upcase
+  while ["Y", "N"].none? { |letter| letter == deal_again }
+    puts "Invalid selection. You must select either 'Y' to deal again or 'N' to walk away:"
+    deal_again = gets.chomp.upcase
+  end
+  deal_again
 end
 
 
